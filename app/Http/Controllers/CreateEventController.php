@@ -45,11 +45,18 @@ class CreateEventController extends Controller
 
         // TODO: fetch image link
         $OgImageName =  $request->banner_image->getClientOriginalName();
-        $request->banner_image->storeAs('banner_image', $OgImageName, 'public');
+        // $request->banner_image->storeAs('banner_image', $OgImageName, 'public');
         $ImgPath = asset('/storage/banner_image/'.$OgImageName);
         $tournament->image_url = $ImgPath;
         // error_log($ImgPath);
         $tournament->save();
+
+        $match_id = $tournament->id;
+        $newFileName = $match_id . '.' . $request->file('banner_image')->getClientOriginalExtension();
+        $ImgPath = asset('/storage/banner_image/'.$newFileName);
+        Tournament::where('id', $match_id)->update(['image_url' => $ImgPath]);
+
+        $request->banner_image->storeAs('banner_image', $newFileName, 'public');
 
         return redirect('/createEvent');
     }

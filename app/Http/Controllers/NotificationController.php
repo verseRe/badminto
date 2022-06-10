@@ -20,7 +20,7 @@ class NotificationController extends Controller
                 'content' => 'A new match has been created!',
                 'created_at' => NOW()
             )
-        );;
+        );
     }
 
     /**
