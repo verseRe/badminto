@@ -13,14 +13,14 @@ class RegisterController extends Controller
 
         $tournaments = tournament::all();
 
-        return view('choose_event', [
+        return view('tournament.register.choose_event', [
             'tournaments' => $tournaments
         ]);
     }
 
     public function select($id){
         $oneTournament = tournament::findOrFail($id);
-        return view('view_register_event', [
+        return view('tournament.register.view_register_event', [
             'oneTournament' => $oneTournament,
             'matchid' => $id
         ]);

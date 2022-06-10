@@ -1,4 +1,4 @@
-@extends('master')
+@extends('tournament.master')
 
 @section('title', 'Register Event')
 
@@ -15,23 +15,23 @@
                 <!-- <h2 class="fw-bold">3rd Party Tournament A</h2> -->
 
                 <h2 class="fw-bold">
-                    {{$oneTournament->MatchName}}
+                    {{$oneTournament->match_name}}
                     <!-- echo $tour[0]['MatchName']; -->
                 </h2>
-                <img src="{{$oneTournament->ImageLink}}" alt="Banner Image" class="img-thumbnail my-2"
+                <img src="{{$oneTournament->image_url}}" alt="Banner Image" class="img-thumbnail my-2"
                     width="410" height="480">
                 <div class="d-flex flex-row p-1">
                     <h5 class="fw-bold mx-2">Type of Event: </h5>
                     <!-- <h5 class="fw-light mx-2">3rd Party Tournament</h5> -->
                     <h5 class="fw-light mx-2">
-                        {{$oneTournament->MatchType}}
+                        {{$oneTournament->match_type}}
                         <!-- // echo $tour[0]['MatchType']; -->
                     </h5>
                 </div>
                 <div class="d-flex flex-row p-1">
                     <h5 class="fw-bold mx-2">Event Venue: </h5>
                     <h5 class="fw-light mx-2">
-                        {{$oneTournament->MatchVenue}}
+                        {{$oneTournament->match_venue}}
                     </h5>
                     <!-- <h5 class="fw-light mx-2">Pusat Sukan UPM</h5> -->
                 </div>
@@ -39,7 +39,7 @@
                     <h5 class="fw-bold mx-2">Start Date: </h5>
                     <!-- <h5 class="fw-light mx-2">28/10/2020</h5> -->
                     <h5 class="fw-light mx-2">
-                        {{$oneTournament->MatchStartDate}}
+                        {{$oneTournament->match_start_date}}
                         <!-- echo $tour[0]['MatchStartDate']; -->
                         
                     </h5>
@@ -48,7 +48,7 @@
                     <h5 class="fw-bold mx-2">End Date: </h5>
                     <!-- <h5 class="fw-light mx-2">28/10/2020</h5> -->
                     <h5 class="fw-light mx-2">
-                        {{$oneTournament->MatchEndDate}}
+                        {{$oneTournament->match_end_date}}
                         
                         <!-- // echo $tour[0]['MatchEndDate']; -->
                     </h5>
@@ -56,7 +56,7 @@
                 <div class="d-flex flex-row p-1">
                     <h5 class="fw-bold mx-2">Time: </h5>
                     <h5 class="fw-light mx-2">
-                        {{$oneTournament->MatchStartTime}}
+                        {{$oneTournament->match_start_time}}
                     </h5>
                     <!-- <h5 class="fw-light mx-2">3:14 PM</h5> -->
                 </div>
@@ -64,7 +64,7 @@
                     <h5 class="fw-bold mx-2">Fee: </h5>
                     <!-- <h5 class="fw-light mx-2">RM 20.00</h5> -->
                     <h5 class="fw-light mx-2">
-                        {{$oneTournament->MatchFee}}
+                        {{$oneTournament->match_fee}}
                         <!-- echo $tour[0]['MatchFee']; -->
                         
                     </h5>

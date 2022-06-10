@@ -25,7 +25,9 @@
             <div class="row">
                 <div class="col-12 text-center pt-5">
                     <h1 class="display-one mt-5">PHP Laravel Project</h1>
-                    <p>Welcome </p>
+                    <p>Welcome to Hell </p>
+                    <br>
+                    <a href="/regEvent" class="btn btn-outline-primary">Create a Tournament</a>
                     <br>
                     <a href="tournament/edit" class="btn btn-outline-primary">Edit a Tournament</a>
                     <br>

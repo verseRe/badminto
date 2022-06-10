@@ -1,0 +1,40 @@
+.white{
+    background-color: white;
+}
+
+.text-white{
+    color: white;
+}
+
+.btn:hover{
+    background-color: rgb(136, 135, 135);
+}
+
+.round-button{
+    border-radius: 16px;
+}
+
+.main-bg-color{
+    background-color: #00B9BC;
+}
+
+.main-color{
+    color: #00B9BC;
+}
+
+.secondary-bg-color{
+    background-color: #005254;
+}
+
+.secondary-color{
+    color: #005254;
+}
+
+.image{
+    width: 30em;
+    height: 10em;
+}
+
+.grey-bg-color{
+    background-color: #CBD3E0;
+}

@@ -1,4 +1,4 @@
-@extends('master')
+@extends('tournament.master')
 
 @section('title', 'Choose Event')
 
