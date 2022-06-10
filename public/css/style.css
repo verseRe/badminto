@@ -1,0 +1,203 @@
+
+<style>
+ul {
+  list-style-type: none;
+  margin: 0 auto;
+  padding: 0;
+  overflow: hidden;
+  background-color: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: inline-block;
+}
+li a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+li {
+  display: inline-block;;
+}
+
+
+.noti{
+  height: 80px;
+  width: 500px;
+  background-color: #00B9BC;
+  padding-left: 50px;
+  margin: 10px 30px 40px 20px;
+}
+
+.regApp{
+  height:180px;
+  width:1000;
+  outline-style: solid;
+  outline-width: thin;
+  flex:100%;
+
+}
+
+.header{
+  background-color:#007C7D;
+  height:180px;
+  width:1000;
+  top: 10px;
+  margin-top: 100;
+  padding: 700;
+  position: relative;
+}
+
+img {
+  width: 40px;
+  height: 30px;
+}
+.indi-stats {<!--   www  .  j av  a 2  s.  com-->
+   font-family:'Roboto', sans-serif;
+   height:300px;
+   margin:10px 16px 31px 16px;
+   text-align:center;
+   display:flex;
+}
+.indi {
+  flex:100%;
+   display:inline-block;
+   margin:5px 6% 16px 6%;
+   width:40%;
+   height:90%;
+  box-shadow: 5px 10px 8px #888888;
+
+}
+.navi{
+  tex-align: center;
+  display: inline-block;
+  margin: 0 auto;
+  background-color: white;
+}
+.logoutbtn{
+  background-color: #005254;
+  width: auto;
+  color: white;
+  padding: 5px;
+  padding-left: 8px;
+  padding-right: 8px;
+  border: none;
+  margin: 10px 30px 5px 15px;
+  border-radius: 30px;
+
+}
+.profilebtn{
+  background-color: #00B9BC;
+  color: white;
+  padding: 5px;
+  padding-left: 8px;
+  padding-right: 8px;
+  width : auto;
+  border: none;
+  margin: 10px 10px 5px 15px;
+  border-radius: 30px;
+}
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+body{
+	line-height: 1.5;
+	font-family: 'Poppins', sans-serif;
+}
+*{
+	margin:0;
+	padding:0;
+	box-sizing: border-box;
+}
+.container{
+	max-width: 1170px;
+	margin:auto;
+}
+.row{
+	display: flex;
+	flex-wrap: wrap;
+}
+ul{
+	list-style: none;
+}
+footer {
+  height: 50;
+    text-align: left;
+    padding: 30px;
+    background-color: #005254;
+    color: white;
+
+}
+.footer-col{
+   width: 25%;
+   padding: 0 15px;
+}
+.footer-col h3{
+	font-size: 18px;
+	color: #ffffff;
+	text-transform: capitalize;
+	margin-bottom: 35px;
+	font-weight: 500;
+
+}
+.footer-col h3::before{
+	content: '';
+
+	left:0;
+	bottom: -10px;
+
+}
+.footer-col ul li:not(:last-child){
+	margin-bottom: 10px;
+}
+.footer-col ul li a{
+	font-size: 16px;
+	text-transform: capitalize;
+	color: #ffffff;
+	text-decoration: none;
+	font-weight: 300;
+	color: #bbbbbb;
+	display: block;
+	transition: all 0.3s ease;
+}
+
+.footer-col .social-links a{
+	display: inline-block;
+	height: 40px;
+	width: 40px;
+	background-color: rgba(255,255,255,0.2);
+	margin:0 10px 10px 0;
+	text-align: center;
+	line-height: 40px;
+	border-radius: 50%;
+	color: #ffffff;
+	transition: all 0.5s ease;
+}
+.footer-col .social-links a:hover{
+	color: #24262b;
+	background-color: #ffffff;
+}
+
+/*responsive*/
+@media(max-width: 767px){
+  .footer-col{
+    width: 50%;
+    margin-bottom: 30px;
+}
+}
+@media(max-width: 574px){
+  .footer-col{
+    width: 100%;
+}
+}
+.regApp{
+  width:80px;
+  height:60px;
+  outline-style: solid;
+  outline-width: thin;
+
+}
+
+
+
+</style>
