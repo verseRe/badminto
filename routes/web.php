@@ -80,3 +80,8 @@ Route::get('view_match_notification', 'App\Http\Controllers\TournamentController
 Route::get('invitation_response', 'App\Http\Controllers\TournamentController@inviteResponse')->name('response');
 Route::post('accept_invitation', 'App\Http\Controllers\TournamentController@acceptInvitation');
 Route::post('reject_invitation', 'App\Http\Controllers\TournamentController@rejectInvitation');
+
+// Register Event
+    Route::get('/regEvent', 'App\Http\Controllers\RegisterController@index');
+    Route::get('/selectEvent/{id}', 'App\Http\Controllers\RegisterController@select');
+    Route::post('/selectEvent', 'App\Http\Controllers\RegisterController@direct');
