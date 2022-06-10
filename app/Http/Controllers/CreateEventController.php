@@ -3,22 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\tournament;
-use App\Models\member;
+use App\Models\User;
 use App\Models\Registration;
 use Illuminate\Http\Request;
+
+/* RAFIQ PUNYA */
 
 class CreateEventController extends Controller
 {
     public function index(){
         $value = request('event');
         if($value == 'internal'){
-            return view('create_internal_form');
+            return view('tournament.create.create_internal_form');
 
         }else if($value == '3rd'){
-            return view('create_tournament_form');
+            return view('tournament.create.create_tournament_form');
 
         }else if($value == 'friendly'){
-            return view('create_match_form');
+            return view('tournament.create.create_match_form');
         }else{
             return;
         }
@@ -31,22 +33,21 @@ class CreateEventController extends Controller
     public function storeInternal(Request $request){
         $tournament = new tournament();
 
-        $tournament->MatchId = null;
-        $tournament->MatchType = 'internal';
-        $tournament->MatchName = request('match_name');
-        $tournament->MatchVenue = request('match_venue');
-        $tournament->MatchStartDate = request('match_start_date');
-        $tournament->MatchEndDate = request('match_end_date');
-        $tournament->MatchStartTime = request('match_time');
-        $tournament->Finished = '0';
-        $tournament->MatchFee = request('match_fee');
-        $tournament->ChatLink = null;
+        $tournament->id = null;
+        $tournament->match_type = 'internal';
+        $tournament->match_name = request('match_name');
+        $tournament->match_venue = request('match_venue');
+        $tournament->match_start_date = request('match_start_date');
+        $tournament->match_end_date = request('match_end_date');
+        $tournament->match_start_time = request('match_time');
+        $tournament->finished = '0';
+        $tournament->match_fee = request('match_fee');
 
         // TODO: fetch image link
         $OgImageName =  $request->banner_image->getClientOriginalName();
         $request->banner_image->storeAs('banner_image', $OgImageName, 'public');
         $ImgPath = asset('/storage/banner_image/'.$OgImageName);
-        $tournament->ImageLink = $ImgPath;
+        $tournament->image_url = $ImgPath;
         // error_log($ImgPath);
         $tournament->save();
 
@@ -56,25 +57,26 @@ class CreateEventController extends Controller
     public function store3rd(Request $request){
         $tournament = new tournament();
 
-        $tournament->MatchId = null;
-        $tournament->MatchType = '3rd';
-        $tournament->MatchName = request('match_name');
-        $tournament->MatchVenue = request('match_venue');
-        $tournament->MatchStartDate = request('match_start_date');
-        $tournament->MatchEndDate = request('match_end_date');
-        $tournament->MatchStartTime = request('match_time');
-        $tournament->Finished = '0';
-        $tournament->MatchFee = request('match_fee');
-        $tournament->ChatLink = null;
+        $tournament->id = null;
+        $tournament->match_type = '3rd';
+        $tournament->match_name = request('match_name');
+        $tournament->match_venue = request('match_venue');
+        $tournament->match_start_date = request('match_start_date');
+        $tournament->match_end_date = request('match_end_date');
+        $tournament->match_start_time = request('match_time');
+        $tournament->finished = '0';
+        $tournament->match_fee = request('match_fee');
+        $tournament->image_url = 'test';
+
         // TODO: fetch image link
         // $tournament->ImageLink = null;
-        $OgImageName =  $request->banner_image->getClientOriginalName();
-        $request->banner_image->storeAs('banner_image', $OgImageName, 'public');
-        $ImgPath = asset('/storage/banner_image/'.$OgImageName);
-        $tournament->ImageLink = $ImgPath;
-        // error_log($ImgPath);
+        // $OgImageName =  $request->banner_image->getPathname();
+        // $request->banner_image->storeAs('banner_image', $OgImageName, 'public');
+        // $ImgPath = asset('/storage/banner_image/'.$OgImageName);
+        // $tournament->image_url = $ImgPath;
+        // dd($OgImageName);
 
-        $tournament->save();
+        // $tournament->save();
 
         return redirect('/createEvent');
     }
@@ -82,17 +84,17 @@ class CreateEventController extends Controller
     public function storeFriendly(){
         $tournament = new tournament();
 
-        $tournament->MatchId = null;
-        $tournament->MatchType = 'friendly';
-        $tournament->MatchName = request('match_name');
-        $tournament->MatchVenue = request('match_venue');
-        $tournament->MatchStartDate = request('match_start_date');
-        $tournament->MatchEndDate = request('match_end_date');
-        $tournament->MatchStartTime = request('match_time');
-        $tournament->Finished = '0';
-        $tournament->MatchFee = request('match_fee');
-        $tournament->ImageLink = null;
-        $tournament->ChatLink = null;
+        $tournament->id = null;
+        $tournament->match_type = 'friendly';
+        $tournament->match_name = request('match_name');
+        $tournament->match_venue = request('match_venue');
+        $tournament->match_start_date = request('match_start_date');
+        $tournament->match_end_date = request('match_end_date');
+        $tournament->match_start_time = request('match_time');
+        $tournament->finished = '0';
+        $tournament->match_fee = request('match_fee');
+        $tournament->image_url = null;
+        $tournament->chat_url = null;
 
         error_log($tournament);
         // $tournament->save();
@@ -100,11 +102,11 @@ class CreateEventController extends Controller
     }
 
     public function directPlayer(){
-        $members = member::all();
+        $members = User::all();
         // $tournament = tournament::select('MatchId')->orderByDesc('MatchId')->limit(1)->get();
         // error_log($tournament[0]->MatchId);
         // dd($members);
-        return view('choose_player', [
+        return view('tournament.create.choose_player', [
             'members' => $members,
             // 'tournament' => $tournament
         ]);

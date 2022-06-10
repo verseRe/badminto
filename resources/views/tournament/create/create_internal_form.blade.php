@@ -1,4 +1,4 @@
-@extends('master')
+@extends('tournament.master')
 
 @section('title','Create Internal Tournament')
 @section('content')

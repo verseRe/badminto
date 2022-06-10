@@ -1,5 +1,5 @@
-@extends('master')
-@section('title', 'Choose Players');
+@extends('tournament.master')
+@section('title', 'Choose Players')
 @section('content')
 
 <section>
@@ -15,37 +15,19 @@
                 <form method="post" id='selectPlayer' action="/eventType/choose">
                     @csrf
                     <p>Selected Players: </p>
-                    {{$members}}
                     @foreach($members as $member)
                     <div class="row border border-dark rounded mb-2" >
                         <div class="col-md-4 d-flex ">
                             <h4>
-                                <label for="p1">{{$member->Username}}</label>
+                                <label for="p1">{{$member->name}}</label>
                                 <label for="p1Status" class="statusLabel-accept"></label>
                             </h4>
                             </div>
                             <div class="col-md-4 offset-md-4 d-flex justify-content-end align-items-center">
-                                <input type="checkbox" class="checkbox" name="players[]" value="{{$member->UserId}}" multiple data-mdb-filter="true">
+                                <input type="checkbox" class="checkbox" name="players[]" value="{{$member->userID}}" multiple data-mdb-filter="true">
                             </div>
                     </div>
                     @endforeach
-                    <!-- $sql = 'SELECT * FROM member';
-                    $stmt = $pdo->query($sql);
-                    $memberArray = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                    foreach ($memberArray as $member) {
-                        echo '<div class="row border border-dark rounded mb-2" >
-                        <div class="col-md-4 d-flex ">
-                            <h4>
-                                <label for="p1">' . $member['Username'] . '</label>
-                                <label for="p1Status" class="statusLabel-accept"></label>
-                            </h4>
-                            </div>
-                            <div class="col-md-4 offset-md-4 d-flex justify-content-end align-items-center">
-                                <input type="checkbox" class="checkbox" name="players[]" value="' . $member['UserId'] . '" multiple data-mdb-filter="true">
-                            </div>
-                    </div>';
-                    } -->
                     
                     <div class="d-flex p-2 flex-row justify-content-end">
                         <input type="reset" value="Cancel" class="btn grey-bg-color text-white mx-2">

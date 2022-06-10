@@ -1,4 +1,4 @@
-@extends('master')
+@extends('tournament.master')
 
 @section('title', 'Create Event')
 
@@ -11,7 +11,7 @@
                 <form method="get" action="/eventType">
                     <label for="event" class="mx-2 px-4">Type of Event:</label>
                     <select name="event" id="event" class="form-select" aria-label="Default select example">
-                        <option selected value="">Choose Match Type</option>
+                        <option selected disabled>Choose Match Type</option>
                         <option value="friendly">Friendly Match</option>
                         <option value="internal">Internal Tournament</option>
                         <option value="3rd">3rd Party Tournament</option>

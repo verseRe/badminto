@@ -94,3 +94,7 @@ Route::post('reject_invitation', 'App\Http\Controllers\TournamentController@reje
     Route::post('/eventType/3rd','App\Http\Controllers\CreateEventController@store3rd');
     Route::post('/eventType/friendly','App\Http\Controllers\CreateEventController@storeFriendly');
     Route::post('/eventType/choose','App\Http\Controllers\CreateEventController@insertRegister');
+
+    Route::get('/createEvent', function(){
+        return view('tournament.create.create_event');
+    });

@@ -27,7 +27,9 @@
                     <h1 class="display-one mt-5">PHP Laravel Project</h1>
                     <p>Welcome to Hell </p>
                     <br>
-                    <a href="/regEvent" class="btn btn-outline-primary">Create a Tournament</a>
+                    <a href="/createEvent" class="btn btn-outline-primary">Create a Tournament</a>
+                    <br>
+                    <a href="/regEvent" class="btn btn-outline-primary">Register a Tournament</a>
                     <br>
                     <a href="tournament/edit" class="btn btn-outline-primary">Edit a Tournament</a>
                     <br>

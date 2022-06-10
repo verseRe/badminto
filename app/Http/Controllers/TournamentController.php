@@ -117,7 +117,7 @@ class TournamentController extends Controller
                 }
         
                 // Move Uploaded File
-                $destinationPath = 'C:\Users\Rober\xampp\htdocs\atom\badminto\resources\views\tournament\media\\'; // CHANGE
+                $destinationPath = '/storage/banner_image/'; // TEST NANTI
                 $newFileName = $match_id . '.' . $file->getClientOriginalExtension();
 
                 $image_url = $destinationPath . $newFileName;
