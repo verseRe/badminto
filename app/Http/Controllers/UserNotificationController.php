@@ -60,7 +60,7 @@ class UserNotificationController extends Controller
             foreach($user_list as $user) {
                 UserNotification::insert(
                     array(
-                        'id' => $notification_id,
+                        'notificationID' => $notification_id,
                         'userId' => $user->userID,
                         'seen' => 0
                     )
@@ -85,7 +85,7 @@ class UserNotificationController extends Controller
             foreach($user_list as $user) {
                 UserNotification::insert(
                     array(
-                        'id' => $notification_id,
+                        'notificationID' => $notification_id,
                         'userId' => $user->userID,
                         'seen' => 0
                     )
@@ -104,7 +104,7 @@ class UserNotificationController extends Controller
     {
         UserNotification::insert(
             array(
-                'id' => $notification_id,
+                'notificationID' => $notification_id,
                 'userId' => $user_id,
                 'seen' => 0
             )

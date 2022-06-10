@@ -58,6 +58,9 @@ class CreateEventController extends Controller
 
         $request->banner_image->storeAs('banner_image', $newFileName, 'public');
 
+        $notification_id = NotificationController::createMatch($match_id);
+        UserNotificationController::blastAllUser($notification_id);
+
         return redirect('/createEvent');
     }
 
