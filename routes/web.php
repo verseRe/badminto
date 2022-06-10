@@ -85,3 +85,12 @@ Route::post('reject_invitation', 'App\Http\Controllers\TournamentController@reje
     Route::get('/regEvent', 'App\Http\Controllers\RegisterController@index');
     Route::get('/selectEvent/{id}', 'App\Http\Controllers\RegisterController@select');
     Route::post('/selectEvent', 'App\Http\Controllers\RegisterController@direct');
+
+// Create Event
+    Route::get('/eventType','App\Http\Controllers\CreateEventController@index');
+    Route::get('/eventType/choose','App\Http\Controllers\CreateEventController@directPlayer');
+
+    Route::post('/eventType/internal','App\Http\Controllers\CreateEventController@storeInternal');
+    Route::post('/eventType/3rd','App\Http\Controllers\CreateEventController@store3rd');
+    Route::post('/eventType/friendly','App\Http\Controllers\CreateEventController@storeFriendly');
+    Route::post('/eventType/choose','App\Http\Controllers\CreateEventController@insertRegister');
