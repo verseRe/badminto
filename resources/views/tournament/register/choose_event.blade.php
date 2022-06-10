@@ -14,7 +14,7 @@
                 <select class="rounded m-2" name="match" id="match">
                     <option value="" selected>No Tournament Available</option>
                     @foreach($tournaments as $tournament)
-                    <option value="{{$tournament->MatchId}}">{{$tournament->MatchName}}</option>
+                    <option value="{{$tournament->id}}">{{$tournament->match_name}}</option>
                     @endforeach
                 </select>
             </div>
@@ -29,7 +29,7 @@
     function submitForm(){
         let form = document.querySelector('#chooseEventForm');
         form.submit();
-        // window.location.href = '/selectEvent/{{$tournament->MatchId}}';
+        // window.location.href = '/selectEvent/{{$tournament->id}}';
     }
 </script>
 
