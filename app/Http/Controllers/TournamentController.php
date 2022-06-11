@@ -3,321 +3,80 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Tournament;
-use App\Models\User;
-use App\Models\RegisterMatch;
-use App\Models\UserNotification;
 
 class TournamentController extends Controller
 {
-    /**
-     * Display a listing of tournaments.
-     */
-    public function indexEdit()
-    {
-        $tp_tournaments = Tournament::all()->where('match_type', '3rd Party')->where('finished', '0'); //Fetch all 3rd tournaments from DB
-        $f_tournaments = Tournament::all()->where('match_type', 'Friendly')->where('finished', '0'); //Fetch all friendly tournaments from DB
-        $int_tournaments = Tournament::all()->where('match_type', 'Internal')->where('finished', '0'); //Fetch all internal tournaments from DB
+    //view tournament
+    public function viewTournament(){
 
-        $notify_count = UserNotificationController::getNotification();
+        request()->validate([
+            'match_name' => 'required',
 
-        return view("tournament.edit.index", ['tp_tournaments' => $tp_tournaments, 'f_tournaments' => $f_tournaments, 'int_tournaments' => $int_tournaments, 'notification' => $notify_count]);
+        ]);
+
+        $match_name = request('match_name');
+        $match_start_date = request('match_start_date');
+        $match_fee = request('match_fee');
+
+        $tournaments = DB::table('tournaments')->select('match_name','match_start_date','match_fee')->get();
+
+        return view('some-view')->with('tournaments', $tournaments);
+
     }
+    public function displayTournament(){
 
-    /**
-     * Display the details of the tournament
-     */
-    public function editView(Request $request)
-    {
-        $match_id = $request->input('match_id');
-        $tournament = Tournament::where('id', $match_id)->first(); // Fetch tournament details
-        return view("tournament.edit.edit_form", ['tournament' => $tournament]);
-    }
+        request()->validate([
+            'match_name' => 'required',
 
-    /**
-     * Update the details of the tournament
-     */
-    public function update(Request $request) {
+        ]);
+
+        $match_name = request('match_name');
+        $match_type = request('match_type');
         
-        // Retrieving input from user
-        $match_id = $request->match_id;
-        $match_name = $request->match_name;
-        $match_venue = $request->match_venue;
-        $match_start_date = $request->match_start_date;
-        $match_end_date = $request->match_end_date;
-        $match_start_time = $request->match_time;
 
-        // Fetching tournament details
-        $old_match = Tournament::all()->where('id', $match_id)->first();
+        $tournaments = DB::table('tournaments')->select('match_name','match_type')->get();
 
-        // Checking if any details are changed
-        $changes = false;
-        if ($match_name != $old_match->match_name || $match_venue != $old_match->match_venue || $match_start_date != $old_match->match_start_date || $match_end_date != $old_match->match_end_date || $match_start_time != $old_match->match_start_time) {
-            $changes = true;
-        }
+        return view('some-view')->with('tournaments', $tournaments);
 
-        if ($request->match_type == 'Friendly') {
+    }
+    //insert payment summary
+    public function paymentSummary(){
 
-            $chat_url = $request->chat_link;
+        request()->validate([
+            'userID' => 'required',
+            'paymentDate' => 'required',
+        ]);
 
-            // Checking if chat url is changed
-            if ($chat_url != $old_match->chat_url) {
-                $changes = true;
+
+        $userID = request('userID');
+        $tournamentID = request('tournamentID');
+        $matchfee = request('matchfee');
+        $isEnoughBalance = false;
+
+        //step1: check if the user have enough balance in their ewallet
+        $userBalanceAmount = User::where('userID', $userID)->value('balanceAmount');
+
+        //payment for match
+        $matchfee = Tournaments::where('id', $tournamentID)->value('matchfee');
+
+            if($userBalanceAmount >= $matchfee){
+                $isEnoughBalance = true;
+            }else{
+                return ['message' => 'Not enough amount'];
             }
 
-            // Update tournament details if there are any changes
-            if ($changes) {
-                // Tournament Update
-                Tournament::where('id', $match_id)->update([
-                    'match_name' => $match_name,
-                    'match_venue' => $match_venue,
-                    'match_start_date' => $match_start_date,
-                    'match_end_date' => $match_end_date,
-                    'match_start_time' => $match_start_time,
-                    'chat_url' => $chat_url
-                ],);
-    
-                // Notification
-                $notification_id = NotificationController::editMatch($match_id, $old_match->match_name); // Create notifcation
-                UserNotificationController::blastInvolvedUser($notification_id, $match_id); // Blast notification
+            if($isEnoughBalance){
+                //step2: deduct the amount from their existing balance if step 1 true
+                User::where('userID', $userID)->decrement('balanceAmount', $matchfee);
+
+                //step3: create the payment if and only if step2 is true
+                $rowsEffected = Tournament::create([
+                    'userID' => $userID,
+                    'trainingID' => $trainingID,
+                    'paymentDate' => request('paymentDate'),
+                    'paymentStatus' => request('paymentStatus')
+                ]);
+                return ['message' => 'Payment Successful!', 'data' => $rowsEffected];
             }
-
-            // Fetch only invited users
-            $invited_player_list = RegisterMatch::select('register_matches.userID', 'register_matches.acceptStatus', 'users.name')->join('users', 'register_matches.userID', '=', 'users.userID')->where('tournamentID', $match_id)->get();
-            // Fetch only uninvited users
-            $uninvited_player_list = User::whereNotIn('userID', function($subquery) use ($match_id) {
-                $subquery->select('userID')
-                ->from(with(new RegisterMatch)->getTable())
-                ->whereIn('acceptStatus', ['Pending', 'Accept', 'Reject'])
-                ->where('tournamentID', $match_id);
-            })->get();
-
-            // Redirect to choose players
-            return view("tournament.edit.edit_player_form", ['uinv_player' => $uninvited_player_list, 'inv_player' => $invited_player_list, 'match_id' => $match_id]);
-        }
-        else {
-
-            $match_fee = $request->match_fee;
-
-            // Checking if match fee is changed
-            if ($match_fee != $old_match->match_fee) {
-                $changes = true;
-            }
-
-            if ($request->hasFile('banner_image')) { // If the user upload a banner image -> changes is true
-
-                $file = $request->file('banner_image');
-
-                // Check file extension
-                $extension = $file->getClientOriginalExtension();
-                if ($extension != 'png' && $extension != 'jpg' && $extension != 'jpeg' ) {
-                    // Redirect back with error
-                    return redirect('/')->with('error', 'File is not image');
-                    die();
-                }
         
-                // Move Uploaded File
-                $destinationPath = '/storage/banner_image/'; // TEST NANTI
-                $newFileName = $match_id . '.' . $file->getClientOriginalExtension();
-
-                $image_url = $destinationPath . $newFileName;
-
-                // Update tournament details
-                Tournament::where('id', $match_id)->update([
-                    'match_name' => $match_name,
-                    'match_venue' => $match_venue,
-                    'match_start_date' => $match_start_date,
-                    'match_end_date' => $match_end_date,
-                    'match_start_time' => $match_start_time,
-                    'match_fee' => $match_fee,
-                    'image_url' => $image_url
-                ],);
-
-                // Notification
-                $notification_id = NotificationController::editMatch($match_id, $old_match->match_name);
-                UserNotificationController::blastInvolvedUser($notification_id, $match_id);
-
-                // Remove old picture (Brute force style)
-                if (file_exists($destinationPath . $match_id . '.png')) {
-                    unlink($destinationPath . $match_id . '.png');
-                }
-                else if (file_exists($destinationPath . $match_id . '.jpg')) {
-                    unlink($destinationPath . $match_id . '.jpg');
-                }
-                else if (file_exists($destinationPath . $match_id . '.jpeg')) {
-                    unlink($destinationPath . $match_id . '.jpeg');
-                }
-
-                // Move new picture
-                $file->move($destinationPath,$newFileName);
-            }
-            else { // If the user does not upload any banner image
-
-                if ($changes) {
-                // Update tournament details
-                Tournament::where('id', $match_id)->update([
-                    'match_name' => $match_name,
-                    'match_venue' => $match_venue,
-                    'match_start_date' => $match_start_date,
-                    'match_end_date' => $match_end_date,
-                    'match_start_time' => $match_start_time,
-                    'match_fee' => $match_fee
-                ],);
-
-                // Notification
-                $notification_id = NotificationController::editMatch($match_id, $old_match->match_name);
-                UserNotificationController::blastInvolvedUser($notification_id, $match_id);
-                }
-
-            }
-
-        }
-
-        // Redirect to view tournament details
-        return redirect('/')->with('status', 'Tournament Form Data Has Been inserted');
-    }
-
-    /**
-     * Invite the selected player
-     */
-    public function playerUpdate(Request $request) {
-
-        // Retrieving input from user
-        $match_id = $request->match_id;
-        $player_list = $request->newPlayerList;
-
-        // Fetching tournament details
-        $match_name = (Tournament::select('match_name')->where('id', $match_id)->first())->match_name;
-
-        if (!empty($player_list)) {
-
-            // Notification
-            $notification_id = NotificationController::inviteMatch($match_id, $match_name);
-
-            if (is_array($player_list)) {
-                foreach ($player_list as $player) {
-                    RegisterMatch::insert(
-                        array(
-                            'tournamentID' => $match_id,
-                            'userID' => $player,
-                            'paymentID' => '0',
-                            'paymentStatus' => '0',
-                            'isFriendly' => '1',
-                            'acceptStatus' => 'Pending'
-                        )
-                    );
-                    UserNotificationController::blastSingleUser($notification_id, $player);
-                }
-            }
-            else {
-                RegisterMatch::insert(
-                    array(
-                        'tournamentID' => $match_id,
-                        'userID' => $player_list,
-                        'paymentID' => '0',
-                        'paymentStatus' => '0',
-                        'isFriendly' => '1',
-                        'acceptStatus' => 'Pending'
-                    )
-                );
-                UserNotificationController::blastSingleUser($notification_id, $player_list);
-            }
-        }
-        
-        // Redirect to view tournament details
-        return redirect('/')->with('status', '');
-    }
-
-    /**
-     * The player redirect to the tournament page
-     */
-    public function viewTournamentFromNotification(Request $request) {
-
-        // Get all the values
-        $match_id = $request->match_id;
-        $notification_id = $request->notification_id;
-        $user_id = '1'; // CHANGE: to session userID
-        $tournament = Tournament::all()->where('id', $match_id)->first();
-
-        // Set the 'seen' value of the notification
-        UserNotification::where(['id' => $notification_id, 'userID' => $user_id])->update([
-            'seen' => '1'
-        ],);
-        
-        return view("tournament.view_form", ['tournament' => $tournament]);
-    }
-
-    /**
-     * The player redirect to the invitation page from notification page
-     */
-    public function inviteResponse(Request $request) {
-
-        // Get all the values
-        $match_id = $request->match_id;
-        $notification_id = $request->notification_id;
-        $user_id = '1'; // CHANGE: to session userID
-        $tournament = Tournament::all()->where('id', $match_id)->first();
-
-        // Set the 'seen' value of the notification
-        UserNotification::where(['id' => $notification_id, 'userID' => $user_id])->update([
-            'seen' => '1'
-        ],);
-
-        // Check if the user has already response previously
-        $status = (RegisterMatch::select('acceptStatus')->where(['tournamentID' => $match_id, 'userID' => '1'])->first())->acceptStatus;
-        
-        if ($status == "Accept") {
-            return view("tournament.invitation_response_form", ['tournament' => $tournament,'message' => 'You already accepted this invitation.', 'status' => 'Accepted']);
-        }
-        else if ($status == "Reject") {
-            return view("tournament.invitation_response_form", ['tournament' => $tournament,'message' => 'You already rejected this invitation.', 'status' => 'Rejected']);
-        }
-        
-        return view("tournament.invitation_response_form", ['tournament' => $tournament, 'message' => '']);
-    }
-
-    /**
-     * Player accept the invitation
-     */
-    public function acceptInvitation(Request $request) {
-
-        $match_id = $request->match_id;
-        $user_id = '1'; // CHANGE: to session userID
-        
-        RegisterMatch::where(['tournamentID' => $match_id, 'userID' => $user_id])->update([
-            'acceptStatus' => 'Accept'
-        ],);
-        
-        return redirect('/');
-    }
-
-    /**
-     * Player reject the invitation
-     */
-    public function rejectInvitation(Request $request) {
-
-        $match_id = $request->match_id;
-        $user_id = '1'; // CHANGE: to session userID
-        
-        RegisterMatch::where(['tournamentID' => $match_id, 'userID' => $user_id])->update([
-            'acceptStatus' => 'Reject'
-        ],);
-        
-        return redirect('/');
-    }
-
-    /**
-     * Close the match
-     */
-    public function closeMatch(Request $request)
-    {
-        $match_id = $request->input('match_id');
-        Tournament::where('id', $match_id)->update([
-            'finished' => '1'
-        ],);
-        
-        // Redirect to view tournament details
-        return redirect('/');
-    }
-
 }
