@@ -98,3 +98,11 @@ Route::post('reject_invitation', 'App\Http\Controllers\TournamentController@reje
     Route::get('/createEvent', function(){
         return view('tournament.create.create_event');
     });
+//view and display
+Route::get('/Tournament/view', function () {
+    return view('Tournament/view');
+});
+
+Route::get('/Tournament/display', function () {
+    return view('Tournament/display');
+});
